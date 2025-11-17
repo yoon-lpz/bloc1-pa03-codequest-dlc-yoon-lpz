@@ -29,6 +29,37 @@ public class Program
         const string TitleHigh = "Wow! You can summon dragons without burning the lab!";
         const string TitleAdvanced = "You assumed Arcanes Master's rank!";
 
+        const string Dice0Row1 = "              ________ ";
+        const string Dice0Row2 = "             /       /|";
+        const string Dice0Row3 = "            /_______/ |";
+
+        const string Dice1Row4 = "            |       | |";
+        const string Dice1Row5 = "            |   o   | /";
+        const string Dice1Row6 = "            |       |/";
+
+        const string Dice2Row4 = "            | o     | |";
+        const string Dice2Row5 = "            |       | /";
+        const string Dice2Row6 = "            |     o |/";
+
+        const string Dice3Row4 = "            | o     | |";
+        const string Dice3Row5 = "            |   o   | /";
+        const string Dice3Row6 = "            |     o |/ ";
+
+        const string Dice4Row4 = "            | o   o | |";
+        const string Dice4Row5 = "            |       | /";
+        const string Dice4Row6 = "            | o   o |/ ";
+
+        const string Dice5Row4 = "            | o   o | |";
+        const string Dice5Row5 = "            |   o   | /";
+        const string Dice5Row6 = "            | o   o |/ ";
+
+        const string Dice6Row4 = "            | o   o | |";
+        const string Dice6Row5 = "            | o   o | /";
+        const string Dice6Row6 = "            | o   o |/ ";
+
+
+        const string Dice0Row7 = "            '-------'  ";
+
         int op;
         int wizardLevel = 0;
         int hoursTrained = 0;
@@ -112,10 +143,11 @@ public class Program
                             break;
                         }
                     break;
+                case 0:
+                    break;
                 default:
                     Console.WriteLine(InputErrorMessage);
                     break;
-
             }
 
         } while (op != 0);
