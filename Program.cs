@@ -84,7 +84,7 @@ public class Program
                 op = int.Parse(Console.ReadLine());
             }
             catch (Exception) {
-                op = 8;
+                op = -1;
             }
 
             switch (op)
