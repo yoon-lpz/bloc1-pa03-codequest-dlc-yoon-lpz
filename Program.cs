@@ -19,9 +19,9 @@ public class Program
         const string MenuPrompt = "Choose an option (1-7) - (0) to exit: ";
         const string InputErrorMessage = "Invalid input. Please enter a number between 0 and 7.";
 
-        const int meditationDays = 5;
+        const int MeditationDays = 5;
         const string AskName = "Input your wizard's name: ";
-        const string WrongName = "You must name your wizard.";
+        const string WrongName = "You must name your wizard using only letters.";
         const string TrainingOutput = "Day {0}: {1} has trained for a total of {2} hours and gained {3} power points.";
         const string TitleFail = "You fail. To second call.";
         const string TitleBasic = "You still mistake a wand with a spoon.";
@@ -100,15 +100,24 @@ public class Program
                             if (string.IsNullOrEmpty(wizardName))
                             {
                                 Console.WriteLine(WrongName);
+                            } else
+                            {
+                                try
+                                {
+                                    wizardName = wizardName.Trim();
+                                    wizardName = wizardName.ToLower();
+                                    wizardName = char.ToUpper(wizardName[0]) + wizardName.Substring(1);
+                                }
+                                catch (Exception)
+                                {
+                                    Console.WriteLine(WrongName);
+                                    wizardName = "";
+                                }
                             }
                         } while (string.IsNullOrEmpty(wizardName));
                     }
-                    
-                    wizardName = wizardName.Trim();
-                    wizardName = wizardName.ToLower();
-                    wizardName = char.ToUpper(wizardName[0]) + wizardName.Substring(1);
 
-                    for (int i = 1; i <= meditationDays; i++)
+                    for (int i = 1; i <= MeditationDays; i++)
                     {
                         hoursTrained += rnd.Next(1, 25);
                         wizardXP += rnd.Next(1, 11);

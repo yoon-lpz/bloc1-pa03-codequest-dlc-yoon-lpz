@@ -56,3 +56,43 @@ The wizard throws a dice and it deals damage to the monster.
 | 1           | 1         | 14          | -          | -     | -        | op = 8 | switch case (op): default                     |
 | 1           | 1         | 15          | -          | -     | -        | op = 8 | Output: InputErrorMessage                     |
 | 1           | 2         | 1           | -          | -     | -        | op = 8 | Show menu and asks input again (loop until 0) |
+
+## Chapter 1
+
+*Name is correct: Yoon*
+| instruction | iteration | instruction | wizardName | outcome                                                          |
+|-------------|-----------|-------------|------------|------------------------------------------------------------------|
+| 1           | -         | -           | -          | string.IsNullOrEmpty(wizardName) = true                          |
+| 2           | 1         | 1           | -          | Output: AskName                                                  |
+| 2           | 1         | 2           | Yoon       | Input: Yoon                                                      |
+| 2           | 1         | 3           | Yoon       | string.IsNullOrEmpty(wizardName) = false                         |
+| 2           | 1         | 4           | Yoon       | string.IsNullOrEmpty(wizardName) = false                         |
+| 3           | -         | -           | Yoon       | wizardName.Trim() --> "Yoon"                                     |
+| 4           | -         | -           | yoon       | wizardName.ToLower() --> "yoon"                                  |
+| 5           | -         | -           | Yoon       | char.ToUpper(wizardName[0]) + wizardName.Substring(1) --> "Yoon" |
+| 6           | 1         | 1           | Yoon       | Executes training days and give a title depending on the result  |
+
+*Name is empty*
+| instruction | iteration | instruction | wizardName | outcome                                   |
+|-------------|-----------|-------------|------------|-------------------------------------------|
+| 1           | -         | -           | -          | string.IsNullOrEmpty(wizardName) --> true |
+| 2           | 1         | 1           | -          | Output: AskName                           |
+| 2           | 1         | 2           |            | Input:                                    |
+| 2           | 1         | 3           |            | string.IsNullOrEmpty(wizardName) --> true |
+| 2           | 1         | 4           |            | Output: WrongName                         |
+| 2           | 1         | 5           |            | string.IsNullOrEmpty(wizardName) --> true |
+| 2           | 2         | 1           |            | Asks name until not empty                 |
+
+*Name is number*
+| instruction | iteration | instruction | wizardName | outcome                                    |
+|-------------|-----------|-------------|------------|--------------------------------------------|
+| 1           | -         | -           | -          | string.IsNullOrEmpty(wizardName) --> true  |
+| 2           | 1         | 1           | -          | Output: AskName                            |
+| 2           | 1         | 2           | "23"       | Input: 23                                  |
+| 2           | 1         | 3           | "23"       | string.IsNullOrEmpty(wizardName) --> false |
+| 2           | 1         | 4           | "23"       | string.IsNullOrEmpty(wizardName) --> false |
+| 2           | 1         | 5           | "23"       | try wizardName.ToLower() --> Exception     |
+| 2           | 1         | 6           | "23"       | Output: WrongName                          |
+| 2           | 1         | 7           | ""         | wizardName = ""                            |
+| 2           | 2         | 1           | ""         | Repeat loop until correct name             |
+
