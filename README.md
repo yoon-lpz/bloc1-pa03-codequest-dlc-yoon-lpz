@@ -96,3 +96,31 @@ The wizard throws a dice and it deals damage to the monster.
 | 2           | 1         | 7           | ""         | wizardName = ""                            |
 | 2           | 2         | 1           | ""         | Repeat loop until correct name             |
 
+## Chapter 2
+*There are no inputs, everything works ok*
+| instruction | iteration | instruction | monster | actHP | actMonster   | diceResult | wizardLevel | outcome                                             |
+|-------------|-----------|-------------|---------|-------|--------------|------------|-------------|-----------------------------------------------------|
+| 1           | -         | -           | 3       | -     | -            | -          | 1           | monster = rnd.Next(0, monsterNames.Length) --> 3    |
+| 2           | -         | -           | 3       | 11    | -            | -          | 1           | actHP = monsterHP[monster] --> 11                   |
+| 3           | -         | -           | 3       | 11    | "Ember Wolf" | -          | 1           | actMonster = monsterNames[monster] --> "Ember Wolf" |
+| 4           | -         | -           | 3       | 11    | "Ember Wolf" | -          | 1           | Output: Monster appears                             |
+| 5           | -         | -           | 3       | 11    | "Ember Wolf" | -          | 1           | Output: MonsterHPMessage                            |
+| 6           | 1         | 1           | 3       | 11    | "Ember Wolf" | 6          | 1           | diceResult = rnd.Next(1,7) --> 6                    |
+| 6           | 1         | 2           | 3       | 11    | "Ember Wolf" | 6          | 1           | Output: DiceRollMessage                             |
+| 6           | 1         | 3           | 3       | 11    | "Ember Wolf" | 6          | 1           | Output: dice[5]                                     |
+| 6           | 1         | 3           | 3       | 5     | "Ember Wolf" | 6          | 1           | actHP - diceResult < 0 --> false (actHP = 5)        |
+| 6           | 1         | 4           | 3       | 5     | "Ember Wolf" | 6          | 1           | Output: MonsterTakeDamage                           |
+| 6           | 1         | 5           | 3       | 5     | "Ember Wolf" | 6          | 1           | Output: MonsterHPMessage                            |
+| 6           | 1         | 6           | 3       | 5     | "Ember Wolf" | 6          | 1           | actHP > 0 --> true                                  |
+| 6           | 1         | 7           | 3       | 5     | "Ember Wolf" | 6          | 1           | Output: RollAgain                                   |
+| 6           | 1         | 8           | 3       | 5     | "Ember Wolf" | 6          | 1           | ReadLine (just to continue)                         |
+| 6           | 1         | 9           | 3       | 5     | "Ember Wolf" | 6          | 1           | actHP > 0 --> true                                  |
+| 6           | 2         | 1           | 3       | 5     | "Ember Wolf" | 5          | 1           | diceResult = rnd.Next(1,7) --> 5                    |
+| 6           | 2         | 2 - 3       | 3       | 5     | "Ember Wolf" | 5          | 1           | Outputs: DiceRollMessage, dice[4]                   |
+| 6           | 2         | 4           | 3       | 0     | "Ember Wolf" | 5          | 1           | actHP - diceResult  < 0 --> false (actHP = 0)       |
+| 6           | 2         | 5 - 6       | 3       | 0     | "Ember Wolf" | 5          | 1           | Outputs: MonsterTakeDamage, MonsterHPMessage        |
+| 6           | 2         | 7           | 3       | 0     | "Ember Wolf" | 5          | 1           | actHP > 0 --> false                                 |
+| 6           | 2         | 8           | 3       | 0     | "Ember Wolf" | 5          | 1           | actHP > 0 --> false                                 |
+| 7           | -         | -           | 3       | 0     | "Ember Wolf" | 5          | 1           | Output: MonsterDefeated                             |
+| 8           | -         | -           | 3       | 0     | "Ember Wolf" | 5          | 1           | wizardLevel < 5 --> true                            |
+| 9 - 10      | -         | -           | 3       | 0     | "Ember Wolf" | 5          | 2           | wizardLevel++ --> 2, Output: LevelUp                |
