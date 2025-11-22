@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Channels;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 public class Program
 {
     public static void Main()
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
         const string MenuTitle = "===== MAIN MENU - CODEQUEST =====";
         const string MenuWelcome = "===== Welcome, {0} the {1} with level {2} =====";
         const string MenuOption1 = "1. Train your wizard";
@@ -39,17 +41,30 @@ public class Program
         const string LevelUp = "{0} levels up!";
         const string MaxLevel = "{0} already reached the max level";
 
-        int op, actHP, monster, diceResult;
+        const string MineLeftAttempts = "You have {0} attempts to mine for bits.";
+        const string MineRowNum = "   0  1  2  3  4 ";
+        const string AskX = "Insert the X axis:";
+        const string AskY = "Insert the Y axis:";
+        const string WrongInput = "Invalid input.";
+        const string mineNothing = "You mine at position [{0}][{1}] but found nothing.";
+        const string mineFound = "You mine at position [{0}][{1}] and you get {2} bits";
+
+        bool aux = true;
+        int op, actHP, monster, diceResult, actBits;
+        int axisX = 0;
+        int axisY = 0;
         int wizardXP = 0;
         int wizardLevel = 1;
         int hoursTrained = 0;
+        int mineAttempts = 5;
+        int totalBits = 0;
         string actMonster;
         string wizardName = "";
         string title = "";
 
         int[] monsterHP = { 3, 5, 10, 11, 18, 15, 20, 50 };
         string[] titlesList = { "Raoden the Elantry", "Zyn the Bugged", "Arka Nullpointer", "Elarion of the Embers", "ITB - Wizard the Gray" };
-        string[] monsterNames = { "Wandering Skeleton", "Forest Goblin", "Green Slime", "Ember Wolf", "Giant Spider", "Iron Golem", "Lost Necromancer", "Ancient Dragon"};
+        string[] monsterNames = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍♂️", "Ancient Dragon 🐉" };
         string[] dice =
         {
             "   ________\r\n  /       /|   \r\n /_______/ |\r\n |       | |\r\n |   o   | /\r\n |       |/ \r\n '-------'\r\n",
@@ -60,7 +75,13 @@ public class Program
             "   ________\r\n  /       /|   \r\n /_______/ |\r\n | o   o | |\r\n | o   o | /\r\n | o   o |/ \r\n '-------'\r\n"
         };
         //I do the dice as an array so I can't avoid doing a long condition afterwards, and I can show whatever I need with just one line that works for all the dice sides
-
+        string[,] mineBase = {
+        { "➖", "➖", "➖", "➖", "➖" },
+        { "➖", "➖", "➖", "➖", "➖" },
+        { "➖", "➖", "➖", "➖", "➖" },
+        { "➖", "➖", "➖", "➖", "➖" },
+        { "➖", "➖", "➖", "➖", "➖" }};
+        string[,] mineAct;
         Random rnd = new Random();
 
         do {
@@ -179,6 +200,84 @@ public class Program
                         Console.WriteLine(MaxLevel, wizardName);
                     }
                         break;
+
+                case 3:
+                    Console.WriteLine(MineLeftAttempts, mineAttempts);
+                    mineAct = mineBase;
+                    for (int i = 0; i < mineAttempts; i++) {
+                        Console.WriteLine(MineRowNum);
+                        for (int j = 0; j < mineAct.GetLength(0); j++)
+                        {
+                            Console.Write($"{j} ");
+                            for (int l = 0; l <  mineAct.GetLength(1); l++)
+                            {
+                                Console.Write($"{mineAct[j,l]} ");
+                            }
+                            Console.WriteLine();
+                        }
+                        Console.WriteLine();
+                        do
+                        {
+                            Console.WriteLine(AskX);
+                            try
+                            {
+                                axisX = int.Parse(Console.ReadLine());
+                                aux = true;
+                                if (axisX < 0 || axisX > 4)
+                                {
+                                    Console.WriteLine(WrongInput);
+                                    aux = false;
+                                }
+                            } catch (Exception)
+                            {
+                                Console.WriteLine(WrongInput);
+                                aux = false;
+                            }
+                        } while (!aux);
+                        do
+                        {
+                            Console.WriteLine(AskY);
+                            try
+                            {
+                                axisY = int.Parse(Console.ReadLine());
+                                aux = true;
+                                if (axisY < 0 || axisY > 4)
+                                {
+                                    Console.WriteLine(WrongInput);
+                                    aux = false;
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine(WrongInput);
+                                aux = false;
+                            }
+                        } while (!aux);
+
+                        actBits = rnd.Next(0, 75);
+                        if (actBits < 5 || actBits > 50)
+                        {
+                            Console.WriteLine(mineNothing, axisX, axisY);
+                            mineAct[axisX, axisY] = "❌";
+                        } else
+                        {
+                            Console.WriteLine(mineFound, axisX, axisY, actBits);
+                            totalBits += actBits;
+                            mineAct[axisX, axisY] = "🪙";
+                        }
+
+                    }
+                    for (int j = 0; j < mineAct.GetLength(0); j++)
+                    {
+                        Console.Write($"{j} ");
+                        for (int l = 0; l < mineAct.GetLength(1); l++)
+                        {
+                            Console.Write($"{mineAct[j, l]} ");
+                        }
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine();
+                    break;
                 case 0:
                     break;
                 default:
