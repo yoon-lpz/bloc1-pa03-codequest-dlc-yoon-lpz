@@ -46,8 +46,11 @@ public class Program
         const string AskX = "Insert the X axis:";
         const string AskY = "Insert the Y axis:";
         const string WrongInput = "Invalid input.";
-        const string mineNothing = "You mine at position [{0}][{1}] but found nothing.";
-        const string mineFound = "You mine at position [{0}][{1}] and you get {2} bits";
+        const string MineNothing = "You mine at position [{0}][{1}] but found nothing.";
+        const string MineFound = "You mine at position [{0}][{1}] and you get {2} bits";
+
+        const string EmptyInventory = "Your inventory is empty.";
+        const string ShowInventory = "Your inventory contains:";
 
         bool aux = true;
         int op, actHP, monster, diceResult, actBits;
@@ -82,6 +85,7 @@ public class Program
         { "➖", "➖", "➖", "➖", "➖" },
         { "➖", "➖", "➖", "➖", "➖" }};
         string[,] mineAct;
+        string[] inventory = new string[0];
         Random rnd = new Random();
 
         do {
@@ -257,11 +261,11 @@ public class Program
                         actBits = rnd.Next(0, 75);
                         if (actBits < 5 || actBits > 50)
                         {
-                            Console.WriteLine(mineNothing, axisX, axisY);
+                            Console.WriteLine(MineNothing, axisX, axisY);
                             mineAct[axisX, axisY] = "❌";
                         } else
                         {
-                            Console.WriteLine(mineFound, axisX, axisY, actBits);
+                            Console.WriteLine(MineFound, axisX, axisY, actBits);
                             totalBits += actBits;
                             mineAct[axisX, axisY] = "🪙";
                         }
@@ -278,6 +282,18 @@ public class Program
                     }
                     Console.WriteLine();
                     break;
+                case 4:
+                    if (inventory.Length == 0)
+                    {
+                        Console.WriteLine(EmptyInventory);
+                    } else
+                    {
+                        Console.WriteLine(ShowInventory);
+                        foreach (string item in inventory) {
+                            Console.WriteLine(item);
+                        }
+                    }
+                        break;
                 case 0:
                     break;
                 default:
