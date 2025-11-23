@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.ExceptionServices;
 using System.Threading.Channels;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -57,6 +58,9 @@ public class Program
         const string Purchase = "You have purchased: {0} for {1} bits. Bits remaining: {2}";
         const string CantPurchase = "You do not have enough bits to purchase this item";
 
+        const string AvalAttacks = "Available attacks for level {0}:";
+        const string KeepTraining = "Keep training to unlock new powers!";
+
         bool aux = true;
         int op, actHP, monster, diceResult, actBits, shopOp;
         int axisX = 0;
@@ -94,13 +98,22 @@ public class Program
         string[] inventory = new string[0];
         string[] inventoryAux;
         string[] shopItems = { "Iron Dagger 🗡️", "Healing Potion ⚗️", "Ancient Key 🗝️", "Crossbow 🏹", "Metal Shield 🛡️" };
+        string[][] attacks = new string[][]
+        {
+            new string[] {"Magic Spark 💫"},
+            new string[] {"Fireball 🔥", "Ice Ray 🥏", "Arcane Shield ⚕️"},
+            new string[] {"Meteor ☄️", "Pure Energy Explosion 💥", "Minor Charm 🎭", "Air Strike 🍃"},
+            new string[] {"Wave of Light ⚜️", "Storm of Wings 🐦"},
+            new string[] { "Cataclysm 🌋", "Portal of Chaos 🌀", "Arcane Blood Pact 🩸", "Elemental Storm ⛈️" }
+        };
+            
         Random rnd = new Random();
 
         do {
             Console.WriteLine(MenuTitle);
             if (!string.IsNullOrEmpty(wizardName))
             {
-                Console.WriteLine(MenuWelcome, wizardName, title, wizardXP);
+                Console.WriteLine(MenuWelcome, wizardName, title, wizardLevel);
             }
             Console.WriteLine(MenuOption1);
             Console.WriteLine(MenuOption2);
@@ -356,6 +369,13 @@ public class Program
                             }
                                 break;
                     }
+                    break;
+                case 6:
+                    Console.WriteLine(AvalAttacks, wizardLevel);
+                    foreach (string attack in attacks[wizardLevel - 1]) {
+                        Console.WriteLine(attack);
+                    }
+                    Console.WriteLine(wizardLevel < 5? KeepTraining : MaxLevel, wizardName);
                     break;
                 case 0:
                     break;
