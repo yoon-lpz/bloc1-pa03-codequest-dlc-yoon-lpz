@@ -61,8 +61,21 @@ public class Program
         const string AvalAttacks = "Available attacks for level {0}:";
         const string KeepTraining = "Keep training to unlock new powers!";
 
+        const string FoundScroll = "You found an ancient scroll with encrypted messages!\n\nScroll to decode:";
+        const string ScrollChoose = "You must decode the following scroll:\nChoose a decoding operation:";
+        const string Decode1 = "1. Decipher spell (remove spaces)";
+        const string Decode2 = "2. Count magical runes (vowels)";
+        const string Decode3 = "3. Extract secret code (numbers)";
+        const string DecodedScroll1 = "Deciphered Spell: {0}";
+        const string DecodedScroll2 = "{0} magical runes (vowels) found";
+        const string DecodedScroll3 = "🔮 Decoded number: {0}";
+        const string AllDecoded = "Congratulations! You have successfully decoded all parts of the scroll.";
+
         bool aux = true;
-        int op, actHP, monster, diceResult, actBits, shopOp;
+        bool scroll1 = false;
+        bool scroll2 = false;
+        bool scroll3 = false;
+        int op, actHP, monster, diceResult, actBits, shopOp, scrollOp;
         int axisX = 0;
         int axisY = 0;
         int wizardXP = 0;
@@ -70,9 +83,12 @@ public class Program
         int hoursTrained = 0;
         int mineAttempts = 5;
         int totalBits = 0;
+        int vowelsCount = 0;
         string actMonster;
         string wizardName = "";
         string title = "";
+        string vowels = "AEIOUaeiou";
+        string numbers = "";
 
         int[] monsterHP = { 3, 5, 10, 11, 18, 15, 20, 50 };
         int[] shopPrices = { 30, 10, 50, 40, 20};
@@ -88,6 +104,15 @@ public class Program
             "   ________\r\n  /       /|   \r\n /_______/ |\r\n | o   o | |\r\n | o   o | /\r\n | o   o |/ \r\n '-------'\r\n"
         };
         //I do the dice as an array so I can't avoid doing a long condition afterwards, and I can show whatever I need with just one line that works for all the dice sides
+        string[] inventory = new string[0];
+        string[] inventoryAux;
+        string[] shopItems = { "Iron Dagger 🗡️", "Healing Potion ⚗️", "Ancient Key 🗝️", "Crossbow 🏹", "Metal Shield 🛡️" };
+        string[] scroll =
+        {
+            "The 🐲 sleeps in the mountain of fire 🔥",
+            "Ancient magic flows through the crystal caves",
+            "Spell: Ignis 5 🔥, Aqua 6 💧, Terra 3 🌍, Ventus 8 🌪️"
+        };
         string[,] mineBase = {
         { "➖", "➖", "➖", "➖", "➖" },
         { "➖", "➖", "➖", "➖", "➖" },
@@ -95,9 +120,6 @@ public class Program
         { "➖", "➖", "➖", "➖", "➖" },
         { "➖", "➖", "➖", "➖", "➖" }};
         string[,] mineAct;
-        string[] inventory = new string[0];
-        string[] inventoryAux;
-        string[] shopItems = { "Iron Dagger 🗡️", "Healing Potion ⚗️", "Ancient Key 🗝️", "Crossbow 🏹", "Metal Shield 🛡️" };
         string[][] attacks = new string[][]
         {
             new string[] {"Magic Spark 💫"},
@@ -110,11 +132,14 @@ public class Program
         Random rnd = new Random();
 
         do {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(MenuTitle);
             if (!string.IsNullOrEmpty(wizardName))
             {
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine(MenuWelcome, wizardName, title, wizardLevel);
             }
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(MenuOption1);
             Console.WriteLine(MenuOption2);
             Console.WriteLine(MenuOption3);
@@ -140,6 +165,7 @@ public class Program
                     {
                         do
                         {
+                            Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine(AskName);
                             wizardName = Console.ReadLine();
 
@@ -196,6 +222,7 @@ public class Program
                     Console.WriteLine(EndTraining, wizardName, wizardXP, title);
                     break;
                 case 2:
+                    Console.ForegroundColor = ConsoleColor.White;
                     monster = rnd.Next(0, monsterNames.Length);
                     actHP = monsterHP[monster];
                     actMonster = monsterNames[monster];
@@ -227,6 +254,7 @@ public class Program
                         break;
 
                 case 3:
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(MineLeftAttempts, mineAttempts);
                     mineAct = mineBase;
                     for (int i = 0; i < mineAttempts; i++) {
@@ -304,6 +332,7 @@ public class Program
                     Console.WriteLine();
                     break;
                 case 4:
+                    Console.ForegroundColor = ConsoleColor.White;
                     if (inventory.Length == 0)
                     {
                         Console.WriteLine(EmptyInventory);
@@ -317,6 +346,7 @@ public class Program
                         break;
 
                 case 5:
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(ShopHeader, totalBits);
                     for (int i = 0; i < shopItems.Length; i++) {
                         Console.WriteLine($"{i + 1} - {shopItems[i]} - Price {shopPrices[i]}");
@@ -371,15 +401,77 @@ public class Program
                     }
                     break;
                 case 6:
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(AvalAttacks, wizardLevel);
                     foreach (string attack in attacks[wizardLevel - 1]) {
                         Console.WriteLine(attack);
                     }
                     Console.WriteLine(wizardLevel < 5? KeepTraining : MaxLevel, wizardName);
                     break;
+                case 7:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(FoundScroll);
+                    for (int i = 0; i < scroll.Length; i++)
+                    {
+                        Console.WriteLine($"  {i + 1} \"{scroll[i]}\"");
+                    }
+                    Console.WriteLine(ScrollChoose);
+                    Console.WriteLine(Decode1);
+                    Console.WriteLine(Decode2);
+                    Console.WriteLine(Decode3);
+                    try
+                    {
+                        scrollOp = int.Parse(Console.ReadLine());
+
+                    } catch (Exception)
+                    {
+                        scrollOp = 0;
+                    }
+
+                    switch (scrollOp)
+                    {
+                        case 1:
+                            scroll[0] = scroll[0].Replace(" ", "");
+                            scroll1 = true;
+                            Console.WriteLine(DecodedScroll1, scroll[0]);
+                            break;
+                        case 2:
+                            foreach (char leter in scroll[1])
+                            {
+                                if (vowels.Contains(leter))
+                                {
+                                    vowelsCount++;
+                                }
+                            }
+                            scroll2 = true;
+                            Console.WriteLine(DecodedScroll2, vowelsCount);
+                            break;
+                        case 3:
+                            foreach (char c in scroll[2])
+                            {
+                                if (char.IsDigit(c))
+                                {
+                                    numbers = string.Concat(numbers, c);
+                                }
+                            }
+                            Console.WriteLine(DecodedScroll3, numbers);
+                            scroll3 = true;
+                            break;
+
+                        default:
+                            Console.WriteLine(WrongInput);
+                            break;
+                    }
+                    if (scroll1 && scroll2 && scroll3)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine(AllDecoded);
+                    }
+                    break;
                 case 0:
                     break;
                 default:
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(InputErrorMessage);
                     break;
             }
