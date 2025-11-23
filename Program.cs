@@ -52,8 +52,13 @@ public class Program
         const string EmptyInventory = "Your inventory is empty.";
         const string ShowInventory = "Your inventory contains:";
 
+        const string ShopHeader = "You chose to buy items\nYou have {0} bits available\nItems available for purchase";
+        const string ShopChoose = "Select the item you wish to buy (1 - {0}) (0 to exit):";
+        const string Purchase = "You have purchased: {0} for {1} bits. Bits remaining: {2}";
+        const string CantPurchase = "You do not have enough bits to purchase this item";
+
         bool aux = true;
-        int op, actHP, monster, diceResult, actBits;
+        int op, actHP, monster, diceResult, actBits, shopOp;
         int axisX = 0;
         int axisY = 0;
         int wizardXP = 0;
@@ -66,6 +71,7 @@ public class Program
         string title = "";
 
         int[] monsterHP = { 3, 5, 10, 11, 18, 15, 20, 50 };
+        int[] shopPrices = { 30, 10, 50, 40, 20};
         string[] titlesList = { "Raoden the Elantry", "Zyn the Bugged", "Arka Nullpointer", "Elarion of the Embers", "ITB - Wizard the Gray" };
         string[] monsterNames = { "Wandering Skeleton 💀", "Forest Goblin 👹", "Green Slime 🟢", "Ember Wolf 🐺", "Giant Spider 🕷️", "Iron Golem 🤖", "Lost Necromancer 🧝‍♂️", "Ancient Dragon 🐉" };
         string[] dice =
@@ -86,6 +92,8 @@ public class Program
         { "➖", "➖", "➖", "➖", "➖" }};
         string[,] mineAct;
         string[] inventory = new string[0];
+        string[] inventoryAux;
+        string[] shopItems = { "Iron Dagger 🗡️", "Healing Potion ⚗️", "Ancient Key 🗝️", "Crossbow 🏹", "Metal Shield 🛡️" };
         Random rnd = new Random();
 
         do {
@@ -290,10 +298,65 @@ public class Program
                     {
                         Console.WriteLine(ShowInventory);
                         foreach (string item in inventory) {
-                            Console.WriteLine(item);
-                        }
+                            Console.WriteLine("\t" + item);
+                        } 
                     }
                         break;
+
+                case 5:
+                    Console.WriteLine(ShopHeader, totalBits);
+                    for (int i = 0; i < shopItems.Length; i++) {
+                        Console.WriteLine($"{i + 1} - {shopItems[i]} - Price {shopPrices[i]}");
+                    }
+                    do
+                    {
+                        Console.WriteLine(ShopChoose);
+
+                        try
+                        {
+                            shopOp = int.Parse(Console.ReadLine());
+                            if (shopOp < shopItems.Length + 1 && shopOp >= 0)
+                            {
+                                aux = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine(WrongInput);
+                                aux = false;
+                            }
+
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine(WrongInput);
+                            shopOp = -1;
+                            aux = false;
+                        }
+                    } while (!aux);
+
+                    switch (shopOp)
+                    {
+                        case 0:
+                            break;
+                        default:
+                            shopOp--;
+                            if (totalBits >= shopPrices[shopOp]) {
+                                totalBits -= shopPrices[shopOp];
+                                Console.WriteLine(Purchase, shopItems[shopOp], shopPrices[shopOp], totalBits);
+                                inventoryAux = new string[inventory.Length + 1];
+                                for (int i = 0; i < inventory.Length; i ++)
+                                {
+                                    inventoryAux[i] = inventory[i];
+                                }
+                                inventoryAux[inventory.Length] = shopItems[shopOp];
+                                inventory = inventoryAux;
+                            } else
+                            {
+                                Console.WriteLine(CantPurchase);
+                            }
+                                break;
+                    }
+                    break;
                 case 0:
                     break;
                 default:
